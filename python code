@@ -1,0 +1,87 @@
+import serial
+import tkinter as tk
+
+def calibration_button_click():
+    calibration_value = calibration_entry.get()
+
+    if not calibration_value:  # Eğer hiçbir değer girilmediyse
+        info_label.config(text="Lütfen değer giriniz.", fg="red")
+    else:
+        command = f'c{calibration_value}'
+        ser.write(command.encode())
+        calibration_entry.delete(0, tk.END)
+        info_label.config(text="Kalibrasyon yapılıyor", fg="orange")
+        calibration_button.config(state=tk.DISABLED)
+        root.after(100, check_calibration_result)
+
+def send_tare_command():
+    ser.write(b't')
+
+def check_calibration_result():
+    arduino_data = ser.readline().decode().strip()
+
+    if "Kalibrasyon tamamlandı." in arduino_data:
+        info_label.config(text="Kalibrasyon tamamlandı", fg="green")
+        root.after(3000, clear_info_message)
+    else:
+        weights = arduino_data.split(',')
+        formatted_data = f"\nLoadcell : {weights[0]} gr"
+        data_label.config(text=formatted_data)
+
+def clear_info_message():
+    info_label.config(text="", fg="black")
+    calibration_button.config(state=tk.NORMAL)
+
+def read_and_print_data():
+    arduino_data = ser.readline().decode().strip()
+
+    if "Kalibrasyon tamamlandı." in arduino_data:
+        info_label.config(text="Kalibrasyon tamamlandı", fg="green")
+        root.after(3000, clear_info_message)
+    elif "Tartının Üstüne Bilinen Bir Ağırlık Koyun." in arduino_data:
+        info_label.config(text="Tartının Üstüne Bilinen Bir Ağırlık Koyun.", fg="blue")
+    elif "Tartının Üstündeki Ağırlıkları Kaldırın." in arduino_data:
+        info_label.config(text="Tartının Üstündeki Ağırlıkları Kaldırın.", fg="red")
+    elif "Dara işlemi tamamlandı." in arduino_data:
+        info_label.config(text="Dara işlemi tamamlandı.", fg="red")
+        root.after(3000, clear_info_message)
+        tare_button.pack(pady=5)
+
+    else:
+        weights = arduino_data.split(',')
+        formatted_data = f"\nLoadcell : {weights[0]} gr"
+        data_label.config(text=formatted_data)
+
+    root.after(100, read_and_print_data)
+
+ser = serial.Serial('COM5', 9600)
+
+root = tk.Tk()
+root.title("Arduino Veri Okuma")
+root.geometry("300x300")
+
+title_label = tk.Label(root, text="Kalibrasyon Degerleri", font=("Arial", 14, "bold"))
+title_label.pack()
+
+data_label = tk.Label(root, text="", font=("Arial", 12))
+data_label.pack()
+
+calibration_label = tk.Label(root, text="Kalibrasyon Degeri:")
+calibration_label.pack()
+
+calibration_entry = tk.Entry(root)
+calibration_entry.pack()
+
+calibration_button = tk.Button(root, text="Kalibrasyon", command=calibration_button_click, width=15, height=1)
+calibration_button.pack()
+
+tare_button = tk.Button(root, text="Dara", command=send_tare_command, width=15, height=1)
+tare_button.pack(pady=5)
+
+info_label = tk.Label(root, text="Tartının Üstündeki Ağırlıkları Kaldırın.", font=("Arial", 12), fg="red")
+info_label.pack()
+
+# Arduino'dan gelen veriyi oku ve ekrana yazdır
+root.after(100, read_and_print_data)
+
+root.mainloop()
