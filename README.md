@@ -1,8 +1,8 @@
-#Arduino ve Python ile Etkileşimli Tartı Sistemi
+# Arduino ve Python ile Etkileşimli Tartı Sistemi
 
 Bu proje, bir Arduino mikrodenetleyici ve bir tartı sensörü (HX711) kullanılarak oluşturulmuş bir sistemdir. Temel amacı, kullanıcıya bir kullanıcı arayüzü üzerinden tartı ölçümleri yapma, kalibrasyon ve dara işlemlerini gerçekleştirme imkanı sunmaktır. Projede Python ve Arduino kodları birlikte çalışarak etkileşimli bir deneyim sağlar.
 
-Proje İşlevselliği:
+## Proje İşlevselliği:
 Tartı Sensörü ve Arduino İletişimi:
 
 Arduino, HX711 kütüphanesi aracılığıyla tartı sensörü ile iletişim kurar.
@@ -35,7 +35,7 @@ Bu proje, temel elektronik ve programlama bilgilerini bir araya getirerek kullan
 
 Bu Python kodu, bir Arduino mikrodenetleyicisi ile seri iletişim kurarak tartı verilerini okuyan ve kullanıcı arayüzü üzerinden kalibrasyon ve dara işlemlerini yöneten bir programı içerir.
 
-#Python Kodu Açıklaması:
+## Python Kodu Açıklaması:
 Gerekli Kütüphaneler ve Seri Bağlantı:
 
 serial ve tkinter kütüphaneleri kullanıldı.
