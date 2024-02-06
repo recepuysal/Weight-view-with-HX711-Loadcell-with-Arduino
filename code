@@ -1,0 +1,93 @@
+#include "HX711.h"
+
+#define LOADCELL_DOUT_PIN 2
+#define LOADCELL_SCK_PIN  3
+#define TRIGGER_PIN 13
+
+HX711 scale;
+float calibration_factor = 0;
+float numeric_value = 0;
+float absoluteReading = 0;  // The absoluteReading variable is declared globally
+
+// Calibration function
+void calibration() {
+  Serial.println("Remove any weight from the scale.");
+  Serial.println("Wait for 5 seconds.");
+  delay(4500);
+  
+  long zero_factor = scale.read_average(20);
+  Serial.println(zero_factor);
+
+  Serial.println("Place a known weight on the scale.");
+  Serial.println("Wait for 5 seconds.");
+  delay(4500);
+
+  long zero_factor1 = scale.read_average(20);
+  Serial.println(zero_factor1);
+
+  // Calculate the difference between readings
+  float reading = (zero_factor1) - (zero_factor);
+  
+  Serial.print("Reading: ");
+  Serial.println(reading);
+  
+  // Calculate and set the calibration factor
+  calibration_factor = reading / numeric_value;
+
+  scale.set_scale(calibration_factor);
+  Serial.println(calibration_factor);
+
+  Serial.println("Calibration completed.");
+}
+
+// Tare function to zero the scale
+void tare() {
+  scale.tare();  // Zero the measurement on the scale
+  
+  digitalWrite(TRIGGER_PIN, HIGH);
+  delay(1000);
+  digitalWrite(TRIGGER_PIN, LOW);
+  Serial.println("Taring process completed.");
+}
+
+void setup() {
+  // Initialize the HX711 scale and serial communication
+  scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
+  scale.set_scale();
+  scale.tare();
+  Serial.begin(9600);
+  pinMode(TRIGGER_PIN, OUTPUT);
+  digitalWrite(TRIGGER_PIN, LOW);
+}
+
+void loop() {
+  static char buffer[3];
+  static int index = 0;
+
+  // Check for available data from the serial port
+  if (Serial.available() > 0) {
+    char incomingChar = Serial.read();
+
+    // If the incoming character is a digit, store it in the buffer
+    if (isdigit(incomingChar)) {
+      buffer[index] = incomingChar;
+      index++;
+
+      // If two digits are received, convert them to a numeric value and trigger calibration
+      if (index == 2) {
+        buffer[2] = '\0';
+        numeric_value = atof(buffer);
+        index = 0;
+        calibration();
+      }
+    }
+    // If the incoming character is 't', trigger the tare function
+    else if (incomingChar == 't') {
+      tare();
+    }
+  }
+
+  // Print the scale units measurement
+  Serial.println(+scale.get_units(), 1);
+  delay(1000);
+}
