@@ -2,6 +2,11 @@
 
 Bu proje, bir Arduino mikrodenetleyici ve bir tartı sensörü (HX711) kullanılarak oluşturulmuş bir sistemdir. Temel amacı, kullanıcıya bir kullanıcı arayüzü üzerinden tartı ölçümleri yapma, kalibrasyon ve dara işlemlerini gerçekleştirme imkanı sunmaktır. Projede Python ve Arduino kodları birlikte çalışarak etkileşimli bir deneyim sağlar.
 
+![1](https://github.com/recepuysal/Weight-view-with-HX711-Loadcell-with-Arduino/assets/148240525/e9fa7d53-e3d7-43a6-822d-5ed5d0a1ebfe)
+
+![2](https://github.com/recepuysal/Weight-view-with-HX711-Loadcell-with-Arduino/assets/148240525/c9ce801f-5179-44cc-a031-497657ba39b0)
+
+
 ## Proje İşlevselliği:
 Tartı Sensörü ve Arduino İletişimi:
 
@@ -69,6 +74,6 @@ Ana Program Döngüsü:
 
 root.mainloop(): Tkinter uygulamasını başlatır ve kullanıcı arayüzünü görüntüler.
 Bu kod, Arduino ile etkileşimli bir kullanıcı arayüzü sağlar ve mikrodenetleyiciden gelen verileri izler. Kullanıcılar, kalibrasyon yapabilir, dara alabilir ve bu sırada bilgi mesajlarını görebilirler.
-![1](https://github.com/recepuysal/Weight-view-with-HX711-Loadcell-with-Arduino/assets/148240525/e9fa7d53-e3d7-43a6-822d-5ed5d0a1ebfe)
-![2](https://github.com/recepuysal/Weight-view-with-HX711-Loadcell-with-Arduino/assets/148240525/c9ce801f-5179-44cc-a031-497657ba39b0)
+
+
 
